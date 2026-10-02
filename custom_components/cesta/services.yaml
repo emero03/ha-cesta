@@ -1,0 +1,39 @@
+add_item:
+  fields:
+    name:
+      required: true
+      example: "Leche"
+      selector:
+        text:
+    note:
+      example: "2 L, sin lactosa"
+      selector:
+        text:
+    stores:
+      example: "Supermercado"
+      selector:
+        text:
+          multiple: true
+    department:
+      example: "Lácteos y huevos"
+      selector:
+        text:
+    icon:
+      example: "🥛"
+      selector:
+        text:
+
+complete_item:
+  fields:
+    name:
+      required: true
+      example: "Leche"
+      selector:
+        text:
+
+get_items:
+  fields:
+    store:
+      example: "Supermercado"
+      selector:
+        text:

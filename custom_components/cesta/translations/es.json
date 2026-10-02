@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Cesta",
+        "description": "Se añadirá una lista de la compra visual con su propio panel en la barra lateral, una tarjeta para tus paneles de control y una lista de tareas compatible con Assist."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Cesta ya está configurada."
+    }
+  },
+  "exceptions": {
+    "not_loaded": { "message": "Cesta no está configurada." },
+    "item_not_found": { "message": "«{name}» no está en la lista." },
+    "store_not_found": { "message": "No existe la tienda «{store}»." }
+  },
+  "services": {
+    "add_item": {
+      "name": "Añadir a la cesta",
+      "description": "Añade un producto a la lista. Si se conoce, se le asigna icono y departamento automáticamente.",
+      "fields": {
+        "name": { "name": "Producto", "description": "Nombre del producto." },
+        "note": { "name": "Detalle", "description": "Cantidad o especificación (por ejemplo «2 L»)." },
+        "stores": { "name": "Tiendas", "description": "Dónde comprarlo. Las tiendas que no existan se crean." },
+        "department": { "name": "Departamento", "description": "Nombre o id del departamento. Si se omite se deduce." },
+        "icon": { "name": "Icono", "description": "Emoji del producto. Si se omite se deduce." }
+      }
+    },
+    "complete_item": {
+      "name": "Marcar como comprado",
+      "description": "Quita un producto de la lista y lo pasa a «Comprado recientemente».",
+      "fields": {
+        "name": { "name": "Producto", "description": "Nombre del producto." }
+      }
+    },
+    "get_items": {
+      "name": "Obtener la lista",
+      "description": "Devuelve los productos pendientes, ordenados por departamento, con un texto listo para notificaciones.",
+      "fields": {
+        "store": { "name": "Tienda", "description": "Solo los productos de esta tienda (y los que no tienen tienda)." }
+      }
+    }
+  }
+}

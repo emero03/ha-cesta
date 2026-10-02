@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Cesta",
+        "description": "Adds a visual shopping list with its own sidebar panel, a dashboard card and an Assist-compatible to-do list."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Cesta is already configured."
+    }
+  },
+  "exceptions": {
+    "not_loaded": { "message": "Cesta is not configured." },
+    "item_not_found": { "message": "\"{name}\" is not on the list." },
+    "store_not_found": { "message": "There is no store called \"{store}\"." }
+  },
+  "services": {
+    "add_item": {
+      "name": "Add to basket",
+      "description": "Adds a product to the list. Known products get their icon and department automatically.",
+      "fields": {
+        "name": { "name": "Product", "description": "Product name." },
+        "note": { "name": "Detail", "description": "Quantity or specification (e.g. \"2 L\")." },
+        "stores": { "name": "Stores", "description": "Where to buy it. Unknown stores are created." },
+        "department": { "name": "Department", "description": "Department name or id. Guessed if omitted." },
+        "icon": { "name": "Icon", "description": "Product emoji. Guessed if omitted." }
+      }
+    },
+    "complete_item": {
+      "name": "Mark as purchased",
+      "description": "Removes a product from the list and moves it to \"Recently purchased\".",
+      "fields": {
+        "name": { "name": "Product", "description": "Product name." }
+      }
+    },
+    "get_items": {
+      "name": "Get list",
+      "description": "Returns pending products sorted by department, plus a ready-to-send text.",
+      "fields": {
+        "store": { "name": "Store", "description": "Only products for this store (and those with no store)." }
+      }
+    }
+  }
+}

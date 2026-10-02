@@ -1,0 +1,140 @@
+<title>Cesta para Home Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Maqueta: barra lateral de Home Assistant + el panel real de Cesta ocupando el resto.
+   Los tokens son las variables de tema de Home Assistant, para que el panel se vea como dentro de HA. */
+:root{
+  --primary-background-color:#fafafa;
+  --card-background-color:#ffffff;
+  --secondary-background-color:#eceeed;
+  --primary-text-color:#212121;
+  --secondary-text-color:#6f7472;
+  --divider-color:rgba(0,0,0,.12);
+  --primary-color:#009ac7;
+  --text-primary-color:#ffffff;
+  --error-color:#db4437;
+  --app-header-background-color:#fafafa;
+  --app-header-text-color:#212121;
+  --app-header-border-bottom:1px solid rgba(0,0,0,.12);
+  --sidebar-bg:#ffffff;
+  --sidebar-active:rgba(0,154,199,.12);
+  --strip-bg:#eef6f9;
+  --ha-font-family-body:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --primary-background-color:#111314;
+  --card-background-color:#1c1e1f;
+  --secondary-background-color:#272a2b;
+  --primary-text-color:#e3e3e3;
+  --secondary-text-color:#9da2a0;
+  --divider-color:rgba(225,225,225,.12);
+  --app-header-background-color:#111314;
+  --app-header-text-color:#e3e3e3;
+  --app-header-border-bottom:1px solid rgba(225,225,225,.12);
+  --sidebar-bg:#1c1e1f;
+  --sidebar-active:rgba(0,154,199,.22);
+  --strip-bg:#14232a;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --primary-background-color:#111314;
+  --card-background-color:#1c1e1f;
+  --secondary-background-color:#272a2b;
+  --primary-text-color:#e3e3e3;
+  --secondary-text-color:#9da2a0;
+  --divider-color:rgba(225,225,225,.12);
+  --app-header-background-color:#111314;
+  --app-header-text-color:#e3e3e3;
+  --app-header-border-bottom:1px solid rgba(225,225,225,.12);
+  --sidebar-bg:#1c1e1f;
+  --sidebar-active:rgba(0,154,199,.22);
+  --strip-bg:#14232a;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{display:flex;flex-direction:column;background:var(--primary-background-color);color:var(--primary-text-color);font-family:var(--ha-font-family-body);font-size:14px}
+.strip{flex:none;display:flex;align-items:center;gap:12px;padding:8px 16px;background:var(--strip-bg);border-bottom:1px solid var(--divider-color);font-size:13px;line-height:1.4;color:var(--secondary-text-color)}
+.strip p{flex:1;min-width:0;margin:0}
+.strip strong{color:var(--primary-text-color);font-weight:500}
+.strip button{flex:none;height:32px;padding:0 14px;border-radius:16px;border:1px solid var(--divider-color);background:var(--card-background-color);color:var(--primary-text-color);font:inherit;font-weight:500;cursor:pointer}
+.strip button:focus-visible{outline:2px solid var(--primary-color);outline-offset:2px}
+.frame{flex:1;min-height:0;display:flex;position:relative}
+.sidebar{flex:none;width:256px;display:flex;flex-direction:column;background:var(--sidebar-bg);border-right:1px solid var(--divider-color)}
+.sidebar .home{display:flex;align-items:center;height:56px;padding:0 20px;font-size:20px;border-bottom:1px solid var(--divider-color)}
+.sidebar nav{display:grid;gap:2px;padding:8px}
+.sidebar a{display:flex;align-items:center;gap:20px;height:44px;padding:0 12px;border-radius:8px;color:var(--primary-text-color);text-decoration:none;font-size:14px;font-weight:500}
+.sidebar a svg{color:var(--secondary-text-color)}
+.sidebar a[aria-current]{background:var(--sidebar-active);color:var(--primary-color)}
+.sidebar a[aria-current] svg{color:var(--primary-color)}
+.sidebar a:focus-visible{outline:2px solid var(--primary-color)}
+.sidebar .grow{flex:1}
+main{flex:1;min-width:0;min-height:0}
+cesta-panel{display:block;height:100%}
+.scrim{display:none}
+@media (max-width:869px){
+  .strip .long{display:none}
+  .sidebar{position:absolute;inset:0 auto 0 0;z-index:20;transform:translateX(-100%);transition:transform .2s ease;box-shadow:0 0 30px rgba(0,0,0,.25)}
+  .frame.menu-open .sidebar{transform:none}
+  .frame.menu-open .scrim{display:block;position:absolute;inset:0;z-index:19;background:rgba(0,0,0,.4)}
+}
+@media (prefers-reduced-motion:reduce){.sidebar{transition:none}}
+</style>
+
+<div class="strip">
+  <p><strong>Vista previa con datos de ejemplo.</strong> <span class="long">Toca un producto para marcarlo como comprado; mantenlo pulsado o haz clic derecho para editarlo. Los cambios se pierden al recargar.</span></p>
+  <button type="button" id="reset">Reiniciar</button>
+</div>
+<div class="frame" id="frame">
+  <aside class="sidebar" aria-label="Barra lateral de Home Assistant">
+    <div class="home">Casa</div>
+    <nav>
+      <a href="#resumen"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>Resumen</a>
+      <a href="#energia"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M11,15H6L13,1V9H18L11,23V15Z"/></svg>Energía</a>
+      <a href="#cesta" aria-current="page"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M22,9H17.21L12.83,2.44C12.64,2.16 12.32,2 12,2C11.68,2 11.36,2.16 11.17,2.45L6.79,9H2C1.45,9 1,9.45 1,10C1,10.09 1,10.18 1.04,10.27L3.58,19.54C3.81,20.38 4.58,21 5.5,21H18.5C19.42,21 20.19,20.38 20.43,19.54L22.97,10.27L23,10C23,9.45 22.55,9 22,9M12,4.79L14.8,9H9.2L12,4.79M18.5,19L5.5,19L3.31,11H20.7L18.5,19M12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17A2,2 0 0,0 14,15A2,2 0 0,0 12,13Z"/></svg>Cesta</a>
+      <a href="#tareas"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7M7.5,13.5L9,12L11,14L15.5,9.5L17,11L11,17L7.5,13.5Z"/></svg>Listas de tareas</a>
+    </nav>
+    <div class="grow"></div>
+    <nav>
+      <a href="#ajustes"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10Z"/></svg>Configuración</a>
+    </nav>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <main><cesta-panel></cesta-panel></main>
+</div>
+
+<script>
+window.CESTA_CATALOG = /*CATALOG*/;
+window.CESTA_STAPLES = /*STAPLES*/;
+window.CESTA_DEPARTMENTS = /*DEPARTMENTS*/;
+window.CESTA_STORES = /*STORES*/;
+</script>
+<script>
+/*MOCK_JS*/
+</script>
+<script type="module">
+/*CESTA_JS*/
+</script>
+<script type="module">
+  const { hass, backend } = window.CestaDemo;
+  const panel = document.querySelector("cesta-panel");
+  const frame = document.getElementById("frame");
+  const narrowQuery = matchMedia("(max-width: 869px)");
+  const syncNarrow = () => {
+    panel.narrow = narrowQuery.matches;
+    if (!narrowQuery.matches) frame.classList.remove("menu-open");
+  };
+  narrowQuery.addEventListener("change", syncNarrow);
+  syncNarrow();
+  panel.hass = hass;
+  panel.addEventListener("hass-toggle-menu", () => frame.classList.toggle("menu-open"));
+  document.getElementById("scrim").addEventListener("click", () => frame.classList.remove("menu-open"));
+  document.querySelectorAll(".sidebar a").forEach((a) =>
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      frame.classList.remove("menu-open");
+    })
+  );
+  document.getElementById("reset").addEventListener("click", () => backend.reset());
+</script>
