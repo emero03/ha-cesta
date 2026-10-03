@@ -1,6 +1,6 @@
 # Cesta
 
-Lista de la compra visual para Home Assistant, al estilo de Bring!: cada producto es una ficha con icono y nombre, coloreada según el departamento del supermercado donde está.
+Integración de Home Assistant tipo Bring: lista de la compra con iconos, organizada automáticamente por secciones (frutas, panadería, lácteos…) y con tiendas que defines tú. Incluye sugerencias y un historial de lo comprado recientemente.
 
 - **Lista por departamentos** en el orden en que recorres el súper (frutas, panadería, carnicería…), cada uno con su color.
 - **Tiendas**: etiqueta cada producto con dónde lo compras (Supermercado, Mercado, Farmacia… o las tuyas) y filtra la lista por tienda.
