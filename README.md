@@ -80,7 +80,7 @@ Enviarte la lista al llegar al supermercado:
 alias: Cesta al llegar al súper
 triggers:
   - trigger: zone
-    entity_id: person.miriam
+    entity_id: person.m
     zone: zone.supermercado
     event: enter
 actions:
